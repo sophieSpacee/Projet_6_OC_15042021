@@ -1,68 +1,136 @@
-const Sauce = require('../models/Sauce');
-const fs = require('fs');
+const Sauce = require("../models/Sauce");
+const fs = require("fs");
+const { db } = require("../models/Sauce");
 
 exports.createSauce = (req, res, next) => {
-  const sauceObject = JSON.parse(req.body.sauce);  
-    const sauce = new Sauce({
-        ...sauceObject,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-    });
-    console.log(sauce);
-    sauce
-      .save()
-      .then(() => res.status(201).json({ message: "objet enregistre" }))
-      .catch((error) => res.status(400).json({ message: 'erreur ajout' }));
+  const sauceObject = JSON.parse(req.body.sauce);
+  const sauce = new Sauce({
+    ...sauceObject,
+    imageUrl: `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`,
+    likes:0,
+    dislikes:0
+  });
+  console.log(sauce);
+  sauce
+    .save()
+    .then(() => res.status(201).json({ message: "objet enregistre" }))
+    .catch((error) => res.status(400).json({ message: "erreur ajout" }));
 };
 
 exports.modifySauce = (req, res, next) => {
-  const sauceObject = req.file ? 
-  { 
-    ...JSON.parse(req.body.sauce),
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  } : { ...req.body };
-  Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-      .then(() => res.status(200).json({ message: "objet modifie" }))
-      .catch((error) => res.status(400).json({ error }));
+  const sauceObject = req.file
+    ? {
+        ...JSON.parse(req.body.sauce),
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`,
+      }
+    : { ...req.body };
+  Sauce.updateOne(
+    { _id: req.params.id },
+    { ...sauceObject, _id: req.params.id }
+  )
+    .then(() => res.status(200).json({ message: "objet modifie" }))
+    .catch((error) => res.status(400).json({ error }));
 };
 
-// exports.likeSauce = (req, res, next) => {
-    // chek user
+exports.likeSauce = (req, res, next) => {
+  Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => {
+      const userId = req.body.userId;
+      const like = req.body.like;
+      const usersLiked = sauce.usersLiked;
+      const usersDisliked = sauce.usersDisliked;
+      const userIdInUsersLiked = usersLiked.includes(userId);
+      const userIdInUsersDisliked = usersDisliked.includes(userId);
+     
+      if (
+        like === -1 &&
+        userIdInUsersLiked === false &&
+        userIdInUsersDisliked === false
+      ) {
+        console.log("in case -1");
+        sauce.usersDisliked.push(userId);
+        console.log(usersDisliked);
+        sauce.dislikes ++
+        sauce.save();
+      }
+      if (
+        like === 0 &&
+        userIdInUsersLiked === true &&
+        userIdInUsersDisliked === false
+      ) {
+        console.log("in case 0 true false");
+        console.log(usersLiked);
+        const indexOfUserIdLiked = usersLiked.indexOf(userId);
+        console.log(indexOfUserIdLiked);
+        const removeUserIdFromUsersLiked = usersLiked.splice(
+          indexOfUserIdLiked,
+          1
+        );
+        console.log(usersLiked);
+        sauce.likes --
 
-    // check squce
+        sauce.save();
+      }
 
-    //check input 
+      if (
+        like === 0 &&
+        userIdInUsersLiked === false &&
+        userIdInUsersDisliked === true
+      ) {
+        console.log("in case 0 false true");
+        console.log(usersDisliked);
+        const indexOfUserIdDisliked = usersDisliked.indexOf(userId);
+        console.log(indexOfUserIdDisliked);
+        const removeUserIdFromUsersDisliked = usersDisliked.splice(
+          indexOfUserIdDisliked,
+          1
+        );
+        console.log(usersDisliked);
+        sauce.dislikes --
+        sauce.save();
+      }
 
-    //cas 1
-
-    // cas -
-//     const sauceObject = JSON.parse(req.body.sauce); 
-//     Sauce.updateOne({ _id: req.params.id }, { sauceObject, _id: req.params.id })
-//         .then(() => res.status(200).json({ message: "objet modifie" }))
-//         .catch((error) => res.status(400).json({ error }));
-//   };
+      if (
+        like === 1 &&
+        userIdInUsersLiked === false &&
+        userIdInUsersDisliked === false
+      ) {
+        console.log("in case 1");
+        sauce.usersLiked.push(userId);
+        console.log(usersLiked);
+        sauce.likes ++
+        sauce.save();
+      }
+    })
+    .then(() => res.status(200).json({ message: "like saved" }))
+    .catch((error) => res.status(404).json({ message: 'erreur dans fonction likeSauce' + error }));
+};
 
 exports.deleteSauce = (req, res, next) => {
-    Sauce.findOne( {_id: req.params.id})
-    .then(sauce => {
-      const filename = sauce.imageUrl.split('/images/')[1];
+  Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => {
+      const filename = sauce.imageUrl.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
         Sauce.deleteOne({ _id: req.params.id })
-      .then(() => res.status(200).json({ message: "objet supprime" }))
-      .catch((error) => res.status(400).json({ error }));
+          .then(() => res.status(200).json({ message: "object suppression successful" }))
+          .catch((error) => res.status(400).json({ error }));
       });
     })
-    .catch(error => res.status(500).json({error}))
-   
+    .catch((error) => res.status(500).json({ error }));
 };
 
 exports.getOneSauce = (req, res, next) => {
-    Sauce.findOne({ _id: req.params.id })
-      .then((sauce) => res.status(200).json(sauce))
-      .catch((error) => res.status(404).json({ error }));
+  Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => res.status(200).json(sauce))
+    .catch((error) => res.status(404).json({ error }));
 };
 
 exports.getAllSauce = (req, res, next) => {
-    Sauce.find()
-      .then((sauces) => res.status(200).json(sauces))
-      .catch((error) => res.status(400).json({ error }));
+  Sauce.find()
+    .then((sauces) => res.status(200).json(sauces))
+    .catch((error) => res.status(400).json({ error }));
 };
