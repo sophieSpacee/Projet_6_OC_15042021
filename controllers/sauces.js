@@ -15,8 +15,8 @@ exports.createSauce = (req, res, next) => {
   console.log(sauce);
   sauce
     .save()
-    .then(() => res.status(201).json({ message: "objet enregistre" }))
-    .catch((error) => res.status(400).json({ message: "erreur ajout" }));
+    .then(() => res.status(201).json({ message: "added sauce" }))
+    .catch((error) => res.status(400).json({ error }));
 };
 
 exports.modifySauce = (req, res, next) => {
@@ -32,7 +32,7 @@ exports.modifySauce = (req, res, next) => {
     { _id: req.params.id },
     { ...sauceObject, _id: req.params.id }
   )
-    .then(() => res.status(200).json({ message: "objet modifie" }))
+    .then(() => res.status(200).json({ message: "modified sauce " }))
     .catch((error) => res.status(400).json({ error }));
 };
 
@@ -106,8 +106,8 @@ exports.likeSauce = (req, res, next) => {
         sauce.save();
       }
     })
-    .then(() => res.status(200).json({ message: "like saved" }))
-    .catch((error) => res.status(404).json({ message: 'erreur dans fonction likeSauce' + error }));
+    .then(() => res.status(200).json({ message: "liked sauce" }))
+    .catch((error) => res.status(404).json({ error }));
 };
 
 exports.deleteSauce = (req, res, next) => {
@@ -116,7 +116,7 @@ exports.deleteSauce = (req, res, next) => {
       const filename = sauce.imageUrl.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
         Sauce.deleteOne({ _id: req.params.id })
-          .then(() => res.status(200).json({ message: "object suppression successful" }))
+          .then(() => res.status(200).json({ message: "deleted sauce" }))
           .catch((error) => res.status(400).json({ error }));
       });
     })
