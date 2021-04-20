@@ -1,18 +1,18 @@
-☐ API respecte RGPD
+✔ API respecte RGPD @done (4/20/2021, 8:04:14 PM)
 ☐ API respecte OWASP
 ✔ mot de passe chiffré --> bcrypt @done (4/20/2021, 1:00:31 PM)
 ✔ 2 types de droits administrateur à la base de données : un accès pour supprimer ou modifier des tables et un accès pour éditer le contenu de la base de données @done (4/20/2021, 2:05:37 PM)
 ✔ sécurité faite pour que le validateur puisse y accéder--> toutes les adresses IP peuvent y accéder @done (4/20/2021, 1:00:34 PM)
 ✔ authentification est renforcée dans toutes les routes --> auth @done (4/20/2021, 1:00:35 PM)
-☐ mots de passe stockés de manière sécurisé --> mongomask
+✔ mots de passe stockés de manière sécurisé --> bcrypt @done (4/20/2021, 3:48:58 PM)
 ✔ adresse mail unique avec plugin mongodb pour rapporter les erreurs --> mongoose unique validator @done (4/20/2021, 1:00:27 PM)
 ☐ masquer les données utilisateurs côté base de données
 ☐ masquer les données utilisateurs côté API
 ☐ utiliser un plugin mongoose pour garantir que toutes les erreurs de la base de données soient signalées
-☐ toute erreur doit être renvoyée telle quelle, sans aucune modification ni ajout. Si nécessaire, utiliser une nouvelle Erreur()
-☐ masquer les emails avec maskdata ou mongomask ou Buffer.from
-☐ validation des entrées avec express-mongoose-sanitize
-☐ vérifier les entrées mail et supprimer les caractères non pertinents
+✔ toute erreur doit être renvoyée telle quelle, sans aucune modification ni ajout. Si nécessaire, utiliser une nouvelle Erreur() @done (4/20/2021, 8:01:20 PM)
+✔ masquer les emails avec maskdata ou mongomask ou Buffer.from --> fait mais unique validator plus possible @done (4/20/2021, 8:01:26 PM)
+✔ validation des entrées avec express-mongoose-sanitize @done (4/20/2021, 3:49:29 PM)
+✔ vérifier les entrées mail et supprimer les caractères non pertinents @done (4/20/2021, 3:49:44 PM)
 ☐ obliger les utilisateurs à utiliser des mots de passe forts
 ☐ encoder les entrées en texte opur éviter d'exécuter un script
 

@@ -1,15 +1,43 @@
 const bcrypt = require("bcrypt");
+const MaskData = require('../node_modules/maskdata')
 const jwt = require("jsonwebtoken");
 const User = require("../models/auth");
+var CryptoJS = require("crypto-js");
+
+
+function encodeBase64(email) {
+  const encodedWord = CryptoJS.enc.Utf8.parse(email);
+  const encoded = CryptoJS.enc.Base64.stringify(encodedWord);
+  return encoded;
+}
+
+// function decodeBase64(encoded) {
+//   const encodedWord = CryptoJS.enc.Base64.parse(encoded);
+//   const decoded = CryptoJS.enc.Utf8.stringify(encodedWord);
+//   return decoded;
+// }
+
 
 exports.signup = (req, res, next) => {
     console.log('signup')
   console.log(req.body)
+  // const emailMask2Options = {
+  //   maskWith: "*", 
+  //   unmaskedStartCharactersBeforeAt: 0,
+  //   unmaskedEndCharactersAfterAt: 257, 
+  //   maskAtTheRate: false
+  // };
+  // const maskedEmail = MaskData.maskEmail2(req.body.email, emailMask2Options);
+
+  // Encrypt
+  var maskedEmail = encodeBase64(req.body.email)
+  
+  console.log(maskedEmail);
     bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
       const user = new User({
-        email: req.body.email,
+        email: maskedEmail,
         password: hash,
       });
       console.log(user)
@@ -24,7 +52,11 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  var maskedEmail = encodeBase64(req.body.email)
+
+
+  console.log(maskedEmail)
+  User.findOne({ email: maskedEmail })
     .then((user) => {
       if (!user) {
         return res.status(401).json({ error: "User not found !" });
