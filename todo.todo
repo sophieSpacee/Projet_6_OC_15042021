@@ -6,13 +6,15 @@
 ✔ authentification est renforcée dans toutes les routes --> auth @done (4/20/2021, 1:00:35 PM)
 ✔ mots de passe stockés de manière sécurisé --> bcrypt @done (4/20/2021, 3:48:58 PM)
 ✔ adresse mail unique avec plugin mongodb pour rapporter les erreurs --> mongoose unique validator @done (4/20/2021, 1:00:27 PM)
-☐ masquer les données utilisateurs côté base de données
-☐ masquer les données utilisateurs côté API
-☐ utiliser un plugin mongoose pour garantir que toutes les erreurs de la base de données soient signalées
+✔ masquer les données utilisateurs côté base de données @done (4/21/2021, 10:57:36 AM)
+✔ masquer les données utilisateurs côté API @done (4/21/2021, 10:57:39 AM)
+✔ utiliser un plugin mongoose pour garantir que toutes les erreurs de la base de données soient signalées @done (4/21/2021, 11:14:50 AM)
 ✔ toute erreur doit être renvoyée telle quelle, sans aucune modification ni ajout. Si nécessaire, utiliser une nouvelle Erreur() @done (4/20/2021, 8:01:20 PM)
 ✔ masquer les emails avec maskdata ou mongomask ou Buffer.from --> fait mais unique validator plus possible @done (4/20/2021, 8:01:26 PM)
 ✔ validation des entrées avec express-mongoose-sanitize @done (4/20/2021, 3:49:29 PM)
 ✔ vérifier les entrées mail et supprimer les caractères non pertinents @done (4/20/2021, 3:49:44 PM)
 ☐ obliger les utilisateurs à utiliser des mots de passe forts
 ☐ encoder les entrées en texte opur éviter d'exécuter un script
-
+☐ supprimer image lors de la modification de la sauce
+☐ désactiver les entités externes dans tous les langages.
+☐ httponly sur cookies

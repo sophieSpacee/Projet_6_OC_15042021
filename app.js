@@ -1,7 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const mongoSanitize = require('express-mongo-sanitize')
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
 const path = require('path');
 const app = express();
 
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
   app.use(mongoSanitize());
+  app.use(helmet());
   app.use('/images', express.static(path.join(__dirname, 'images')));
   app.use('/api/auth', authRoutes);
   app.use('/api/sauces', saucesRoutes);

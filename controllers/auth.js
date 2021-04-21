@@ -30,14 +30,14 @@ exports.signup = (req, res, next) => {
   // const maskedEmail = MaskData.maskEmail2(req.body.email, emailMask2Options);
 
   // Encrypt
-  var maskedEmail = encodeBase64(req.body.email)
+  var base64Email = encodeBase64(req.body.email)
   
-  console.log(maskedEmail);
+  console.log(base64Email);
     bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
       const user = new User({
-        email: maskedEmail,
+        email: base64Email,
         password: hash,
       });
       console.log(user)
@@ -52,11 +52,9 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-  var maskedEmail = encodeBase64(req.body.email)
-
-
-  console.log(maskedEmail)
-  User.findOne({ email: maskedEmail })
+  var base64Email = encodeBase64(req.body.email)
+  console.log(base64Email)
+  User.findOne({ email: base64Email })
     .then((user) => {
       if (!user) {
         return res.status(401).json({ error: "User not found !" });
