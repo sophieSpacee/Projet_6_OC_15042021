@@ -15,6 +15,6 @@
 ✔ vérifier les entrées mail et supprimer les caractères non pertinents @done (4/20/2021, 3:49:44 PM)
 ☐ obliger les utilisateurs à utiliser des mots de passe forts
 ☐ encoder les entrées en texte opur éviter d'exécuter un script
-☐ supprimer image lors de la modification de la sauce
+✔ supprimr image lors de la modification de la sauce @done (4/21/2021, 1:09:34 PM)
 ☐ désactiver les entités externes dans tous les langages.
 ☐ httponly sur cookies

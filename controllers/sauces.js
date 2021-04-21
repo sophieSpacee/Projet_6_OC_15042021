@@ -28,12 +28,25 @@ exports.modifySauce = (req, res, next) => {
         }`,
       }
     : { ...req.body };
-  Sauce.updateOne(
+  if(req.file){
+      Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => {
+      const filename = sauce.imageUrl.split("/images/")[1];
+      fs.unlink(`images/${filename}`, () => {
+        Sauce.updateOne(
+          { _id: req.params.id },
+          { ...sauceObject, _id: req.params.id }
+        )
+          .then(() => res.status(200).json({ message: "modified sauce " }))
+          .catch((error) => res.status(400).json({ error }));
+    });})} else {
+       Sauce.updateOne(
     { _id: req.params.id },
     { ...sauceObject, _id: req.params.id }
   )
     .then(() => res.status(200).json({ message: "modified sauce " }))
     .catch((error) => res.status(400).json({ error }));
+    }
 };
 
 exports.likeSauce = (req, res, next) => {

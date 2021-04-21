@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const MaskData = require('../node_modules/maskdata')
+// const MaskData = require('../node_modules/maskdata');
 const jwt = require("jsonwebtoken");
 const User = require("../models/auth");
 var CryptoJS = require("crypto-js");
@@ -20,7 +20,7 @@ function encodeBase64(email) {
 
 exports.signup = (req, res, next) => {
     console.log('signup')
-  console.log(req.body)
+  console.log(req.body)  
   // const emailMask2Options = {
   //   maskWith: "*", 
   //   unmaskedStartCharactersBeforeAt: 0,
