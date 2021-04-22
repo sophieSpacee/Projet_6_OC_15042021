@@ -19,8 +19,7 @@ function encodeBase64(email) {
 
 
 exports.signup = (req, res, next) => {
-    console.log('signup')
-  console.log(req.body)  
+ 
   // const emailMask2Options = {
   //   maskWith: "*", 
   //   unmaskedStartCharactersBeforeAt: 0,
@@ -29,10 +28,9 @@ exports.signup = (req, res, next) => {
   // };
   // const maskedEmail = MaskData.maskEmail2(req.body.email, emailMask2Options);
 
-  // Encrypt
   var base64Email = encodeBase64(req.body.email)
-  
   console.log(base64Email);
+
     bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
