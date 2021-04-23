@@ -11,7 +11,7 @@ const saucesRoutes = require('./routes/sauces')
 mongoose
   .connect(
     "mongodb+srv://sophie:pekocko@cluster3.p7igg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
+    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex : true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch((error) => console.log(error));

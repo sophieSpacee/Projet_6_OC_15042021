@@ -9,10 +9,9 @@ exports.createSauce = (req, res, next) => {
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
-    likes:0,
-    dislikes:0
+    likes: 0,
+    dislikes: 0,
   });
-  console.log(sauce);
   sauce
     .save()
     .then(() => res.status(201).json({ message: "added sauce" }))
@@ -28,9 +27,8 @@ exports.modifySauce = (req, res, next) => {
         }`,
       }
     : { ...req.body };
-  if(req.file){
-      Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => {
+  if (req.file) {
+    Sauce.findOne({ _id: req.params.id }).then((sauce) => {
       const filename = sauce.imageUrl.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
         Sauce.updateOne(
@@ -39,14 +37,16 @@ exports.modifySauce = (req, res, next) => {
         )
           .then(() => res.status(200).json({ message: "modified sauce " }))
           .catch((error) => res.status(400).json({ error }));
-    });})} else {
-       Sauce.updateOne(
-    { _id: req.params.id },
-    { ...sauceObject, _id: req.params.id }
-  )
-    .then(() => res.status(200).json({ message: "modified sauce " }))
-    .catch((error) => res.status(400).json({ error }));
-    }
+      });
+    });
+  } else {
+    Sauce.updateOne(
+      { _id: req.params.id },
+      { ...sauceObject, _id: req.params.id }
+    )
+      .then(() => res.status(200).json({ message: "modified sauce " }))
+      .catch((error) => res.status(400).json({ error }));
+  }
 };
 
 exports.likeSauce = (req, res, next) => {
@@ -58,64 +58,29 @@ exports.likeSauce = (req, res, next) => {
       const usersDisliked = sauce.usersDisliked;
       const userIdInUsersLiked = usersLiked.includes(userId);
       const userIdInUsersDisliked = usersDisliked.includes(userId);
-     
-      if (
-        like === -1 &&
-        userIdInUsersLiked === false &&
-        userIdInUsersDisliked === false
-      ) {
-        console.log("in case -1");
+
+      if (like === -1 && !userIdInUsersLiked && !userIdInUsersDisliked) {
         sauce.usersDisliked.push(userId);
-        console.log(usersDisliked);
-        sauce.dislikes ++
+        sauce.dislikes++;
         sauce.save();
       }
-      if (
-        like === 0 &&
-        userIdInUsersLiked === true &&
-        userIdInUsersDisliked === false
-      ) {
-        console.log("in case 0 true false");
-        console.log(usersLiked);
+      if (like === 0 && userIdInUsersLiked && !userIdInUsersDisliked) {
         const indexOfUserIdLiked = usersLiked.indexOf(userId);
-        console.log(indexOfUserIdLiked);
-        const removeUserIdFromUsersLiked = usersLiked.splice(
-          indexOfUserIdLiked,
-          1
-        );
-        console.log(usersLiked);
-        sauce.likes --
-
+        usersLiked.splice(indexOfUserIdLiked, 1);
+        sauce.likes--;
         sauce.save();
       }
 
-      if (
-        like === 0 &&
-        userIdInUsersLiked === false &&
-        userIdInUsersDisliked === true
-      ) {
-        console.log("in case 0 false true");
-        console.log(usersDisliked);
+      if (like === 0 && !userIdInUsersLiked && userIdInUsersDisliked) {
         const indexOfUserIdDisliked = usersDisliked.indexOf(userId);
-        console.log(indexOfUserIdDisliked);
-        const removeUserIdFromUsersDisliked = usersDisliked.splice(
-          indexOfUserIdDisliked,
-          1
-        );
-        console.log(usersDisliked);
-        sauce.dislikes --
+        usersDisliked.splice(indexOfUserIdDisliked, 1);
+        sauce.dislikes--;
         sauce.save();
       }
 
-      if (
-        like === 1 &&
-        userIdInUsersLiked === false &&
-        userIdInUsersDisliked === false
-      ) {
-        console.log("in case 1");
+      if (like === 1 && !userIdInUsersLiked && !userIdInUsersDisliked) {
         sauce.usersLiked.push(userId);
-        console.log(usersLiked);
-        sauce.likes ++
+        sauce.likes++;
         sauce.save();
       }
     })

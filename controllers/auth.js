@@ -1,9 +1,7 @@
 const bcrypt = require("bcrypt");
-// const MaskData = require('../node_modules/maskdata');
 const jwt = require("jsonwebtoken");
 const User = require("../models/auth");
 var CryptoJS = require("crypto-js");
-
 
 function encodeBase64(email) {
   const encodedWord = CryptoJS.enc.Utf8.parse(email);
@@ -11,38 +9,19 @@ function encodeBase64(email) {
   return encoded;
 }
 
-// function decodeBase64(encoded) {
-//   const encodedWord = CryptoJS.enc.Base64.parse(encoded);
-//   const decoded = CryptoJS.enc.Utf8.stringify(encodedWord);
-//   return decoded;
-// }
-
-
 exports.signup = (req, res, next) => {
- 
-  // const emailMask2Options = {
-  //   maskWith: "*", 
-  //   unmaskedStartCharactersBeforeAt: 0,
-  //   unmaskedEndCharactersAfterAt: 257, 
-  //   maskAtTheRate: false
-  // };
-  // const maskedEmail = MaskData.maskEmail2(req.body.email, emailMask2Options);
-
-  var base64Email = encodeBase64(req.body.email)
-  console.log(base64Email);
-
-    bcrypt
+  var base64Email = encodeBase64(req.body.email);
+  bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
       const user = new User({
         email: base64Email,
         password: hash,
       });
-      console.log(user)
-      user.save()
+      user
+        .save()
         .then(() => {
-            console.log(user)
-            res.status(201).json({ message: "User created !" })
+          res.status(201).json({ message: "User created !" });
         })
         .catch((error) => res.status(400).json({ error }));
     })
@@ -50,8 +29,7 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-  var base64Email = encodeBase64(req.body.email)
-  console.log(base64Email)
+  const base64Email = encodeBase64(req.body.email);
   User.findOne({ email: base64Email })
     .then((user) => {
       if (!user) {
@@ -65,11 +43,9 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user._id,
-            token: jwt.sign(
-              { userId: user._id },
-              "RANDOM-TOKEN-SECRET",
-              { expiresIn: "24h" }
-            ),
+            token: jwt.sign({ userId: user._id }, "RANDOM-TOKEN-SECRET", {
+              expiresIn: "24h",
+            }),
           });
         })
         .catch((error) => res.status(500).json({ error }));
