@@ -60,28 +60,45 @@ exports.likeSauce = (req, res, next) => {
       const userIdInUsersDisliked = usersDisliked.includes(userId);
 
       if (like === -1 && !userIdInUsersLiked && !userIdInUsersDisliked) {
+        console.log('userId', userId)
+        console.log('usersDisliked list before sauce is saved', usersDisliked)
         sauce.usersDisliked.push(userId);
         sauce.dislikes++;
         sauce.save();
+        console.log('usersDisliked list after sauce is saved', usersDisliked)
+
       }
       if (like === 0 && userIdInUsersLiked && !userIdInUsersDisliked) {
+        console.log('userId', userId)
+        console.log('usersLiked list before sauce is saved', usersLiked)
         const indexOfUserIdLiked = usersLiked.indexOf(userId);
         usersLiked.splice(indexOfUserIdLiked, 1);
         sauce.likes--;
         sauce.save();
+        console.log('usersLiked list after sauce is saved', usersLiked)
+
       }
 
       if (like === 0 && !userIdInUsersLiked && userIdInUsersDisliked) {
+        
+        console.log('userId', userId)
+        console.log('usersDisliked list before sauce is saved', usersDisliked)
         const indexOfUserIdDisliked = usersDisliked.indexOf(userId);
         usersDisliked.splice(indexOfUserIdDisliked, 1);
         sauce.dislikes--;
         sauce.save();
+        console.log('usersDisliked list after sauce is saved', usersDisliked)
+
       }
 
       if (like === 1 && !userIdInUsersLiked && !userIdInUsersDisliked) {
+        console.log('userId', userId)
+        console.log('usersLiked list before sauce is saved', usersLiked)
         sauce.usersLiked.push(userId);
         sauce.likes++;
         sauce.save();
+        console.log('usersLiked list after sauce is saved', usersLiked)
+
       }
     })
     .then(() => res.status(200).json({ message: "liked sauce" }))

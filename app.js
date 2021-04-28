@@ -3,14 +3,16 @@ const mongoose = require("mongoose");
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const path = require('path');
+const dotenv = require("dotenv");
 const app = express();
+dotenv.config();
 
 const authRoutes = require('./routes/auth');
 const saucesRoutes = require('./routes/sauces')
 
 mongoose
   .connect(
-    "mongodb+srv://sophie:pekocko@cluster3.p7igg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    process.env.MONGO_URL,
     { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex : true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
