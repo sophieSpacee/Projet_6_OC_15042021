@@ -1,4 +1,4 @@
-# SophieGauthier_6_15042021
+# Piiquante -  Projet 6 of Web Developper course with OpenClassrooms
 
 ##To start this project 
 
